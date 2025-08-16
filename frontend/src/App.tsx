@@ -1,7 +1,12 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { FrappeProvider, useFrappeGetDocList } from "frappe-react-sdk";
+import {
+  FrappeProvider,
+  useFrappeAuth,
+  useFrappeGetDocList,
+} from "frappe-react-sdk";
+import { Button } from "@/components/ui/button";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -23,9 +28,9 @@ function App() {
           <h1>Vite + React + Pushakar!</h1>
           <TestComponent />
           <div className="card">
-            <button onClick={() => setCount((count) => count + 1)}>
+            <Button onClick={() => setCount((count) => count + 1)}>
               count is {count}
-            </button>
+            </Button>
             <p>
               Edit <code>src/App.jsx</code> and save to test HMR
             </p>
@@ -41,6 +46,7 @@ function App() {
 
 const TestComponent = () => {
   const { data } = useFrappeGetDocList("User");
-  return <div />;
+  const { currentUser } = useFrappeAuth();
+  return <Button>Current User is {currentUser}</Button>;
 };
 export default App;
