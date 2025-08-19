@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import Projects from "./pages/Projects.tsx";
 
 const router = createBrowserRouter(
   [
@@ -12,7 +13,7 @@ const router = createBrowserRouter(
       children: [
         {
           path: "projects",
-          element: <div>Projects</div>,
+          element: <Projects />,
         },
         {
           path: "tasks",
