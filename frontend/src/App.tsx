@@ -2,6 +2,7 @@ import "./App.css";
 import { FrappeProvider } from "frappe-react-sdk";
 
 import Login from "./pages/Login";
+import { Outlet } from "react-router";
 function App() {
   return (
     <div className="App">
@@ -9,7 +10,7 @@ function App() {
         socketPort={import.meta.env.VITE_SOCKET_PORT}
         siteName={import.meta.env.VITE_SITE_NAME}
       >
-        <Login />
+        <Outlet />
       </FrappeProvider>
     </div>
   );
