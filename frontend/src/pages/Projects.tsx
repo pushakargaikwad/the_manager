@@ -8,9 +8,18 @@ import {
 } from "@/components/ui/table";
 import type { Project } from "@/types/Projects/Project";
 import { useFrappeGetDocList } from "frappe-react-sdk";
+import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Projects = () => {
-  const { data } = useFrappeGetDocList<Project>("Project", {
+  const [status, setStatus] = useState("");
+  const { data, error } = useFrappeGetDocList<Project>("Project", {
     fields: [
       "name",
       "project_name",
@@ -20,13 +29,25 @@ const Projects = () => {
       "percent_complete",
       "priority",
     ],
+    filters: status ? [["status", "=", status]] : undefined,
   });
   console.log("data", data);
+  console.log("error", error);
   return (
     <div className="p-2">
       <h1 className="scroll-m-20 mb-4 text-center text-4xl font-extrabold tracking-tight text-balance">
         Projects
       </h1>
+      <Select onValueChange={setStatus} value={status}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Open">Open</SelectItem>
+          <SelectItem value="Completed">Completed</SelectItem>
+          <SelectItem value="Cancelled">Cancelled</SelectItem>
+        </SelectContent>
+      </Select>
       <Table>
         <TableHeader>
           <TableRow>
