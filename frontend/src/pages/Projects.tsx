@@ -1,16 +1,26 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { Project } from "@/types/Projects/Project";
 import { useFrappeGetDocList } from "frappe-react-sdk";
 
 const Projects = () => {
-  const { data } = useFrappeGetDocList("Project");
+  const { data } = useFrappeGetDocList<Project>("Project", {
+    fields: [
+      "name",
+      "project_name",
+      "status",
+      "expected_start_date",
+      "expected_end_date",
+      "percent_complete",
+      "priority",
+    ],
+  });
   console.log("data", data);
   return (
     <div className="p-2">
@@ -18,22 +28,34 @@ const Projects = () => {
         Projects
       </h1>
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
+            <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead>Title</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead>Priority</TableHead>
+            <TableHead>Start Date</TableHead>
+            <TableHead>End Date</TableHead>
+            <TableHead className="text-right">% Complete</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
+          {data?.map((project) => {
+            return (
+              <TableRow>
+                <TableCell className="font-medium">{project.name}</TableCell>
+                <TableCell>{project.project_name}</TableCell>
+                <TableCell>{project.status}</TableCell>
+                <TableCell>{project.priority}</TableCell>
+                <TableCell>{project.expected_start_date}</TableCell>
+                <TableCell>{project.expected_end_date}</TableCell>
+
+                <TableCell className="text-right">
+                  {project.percent_complete}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
