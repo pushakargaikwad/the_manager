@@ -7,8 +7,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Project } from "@/types/Projects/Project";
-import { useFrappeGetDocList } from "frappe-react-sdk";
-import { useState } from "react";
+import { useFrappeGetDocList, type Filter } from "frappe-react-sdk";
+import { useMemo, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -16,9 +16,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import PageSelector from "@/components/common/pagination/PageSelector";
+import Pagination from "@/components/common/pagination/Pagination";
 
 const Projects = () => {
   const [status, setStatus] = useState("");
+  const [pageLimitStart, setPageLimitStart] = useState(0);
+  const filters = useMemo(() => {
+    const f: Filter[] = [];
+    if (status) {
+      f.push(["status", "=", status]);
+    }
+    return f;
+  }, [status]);
+
   const { data, error } = useFrappeGetDocList<Project>("Project", {
     fields: [
       "name",
@@ -29,7 +40,9 @@ const Projects = () => {
       "percent_complete",
       "priority",
     ],
-    filters: status ? [["status", "=", status]] : undefined,
+    filters: filters,
+    limit: 20,
+    limit_start: pageLimitStart,
   });
   console.log("data", data);
   console.log("error", error);
@@ -48,6 +61,13 @@ const Projects = () => {
           <SelectItem value="Cancelled">Cancelled</SelectItem>
         </SelectContent>
       </Select>
+      <Pagination
+        doctype="Project"
+        filters={filters}
+        pageLimitStart={pageLimitStart}
+        setPageLimitStart={setPageLimitStart}
+      />
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -63,7 +83,7 @@ const Projects = () => {
         <TableBody>
           {data?.map((project) => {
             return (
-              <TableRow>
+              <TableRow key={project.name}>
                 <TableCell className="font-medium">{project.name}</TableCell>
                 <TableCell>{project.project_name}</TableCell>
                 <TableCell>{project.status}</TableCell>
