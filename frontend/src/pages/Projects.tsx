@@ -51,22 +51,24 @@ const Projects = () => {
       <h1 className="scroll-m-20 mb-4 text-center text-4xl font-extrabold tracking-tight text-balance">
         Projects
       </h1>
-      <Select onValueChange={setStatus} value={status}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Open">Open</SelectItem>
-          <SelectItem value="Completed">Completed</SelectItem>
-          <SelectItem value="Cancelled">Cancelled</SelectItem>
-        </SelectContent>
-      </Select>
-      <Pagination
-        doctype="Project"
-        filters={filters}
-        pageLimitStart={pageLimitStart}
-        setPageLimitStart={setPageLimitStart}
-      />
+      <div className="flex gap-2 justify-between">
+        <Select onValueChange={setStatus} value={status}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Open">Open</SelectItem>
+            <SelectItem value="Completed">Completed</SelectItem>
+            <SelectItem value="Cancelled">Cancelled</SelectItem>
+          </SelectContent>
+        </Select>
+        <Pagination
+          doctype="Project"
+          filters={filters}
+          pageLimitStart={pageLimitStart}
+          setPageLimitStart={setPageLimitStart}
+        />
+      </div>
 
       <Table>
         <TableHeader>
