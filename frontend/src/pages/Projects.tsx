@@ -7,7 +7,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Project } from "@/types/Projects/Project";
-import { useFrappeGetDocList, type Filter } from "frappe-react-sdk";
+import {
+  useFrappeDocTypeEventListener,
+  useFrappeGetDocList,
+  type Filter,
+} from "frappe-react-sdk";
 import { useMemo, useState } from "react";
 import {
   Select,
@@ -18,6 +22,8 @@ import {
 } from "@/components/ui/select";
 import PageSelector from "@/components/common/pagination/PageSelector";
 import Pagination from "@/components/common/pagination/Pagination";
+
+import CreateProjectButton from "@/components/features/Projects/CreateProjectButton";
 
 const Projects = () => {
   const [status, setStatus] = useState("");
@@ -30,7 +36,7 @@ const Projects = () => {
     return f;
   }, [status]);
 
-  const { data, error } = useFrappeGetDocList<Project>("Project", {
+  const { data, error, mutate } = useFrappeGetDocList<Project>("Project", {
     fields: [
       "name",
       "project_name",
@@ -44,14 +50,21 @@ const Projects = () => {
     limit: 20,
     limit_start: pageLimitStart,
   });
+
+  useFrappeDocTypeEventListener("Project", () => {
+    mutate();
+  });
   console.log("data", data);
   console.log("error", error);
   return (
     <div className="p-2">
-      <h1 className="scroll-m-20 mb-4 text-center text-4xl font-extrabold tracking-tight text-balance">
-        Projects
-      </h1>
-      <div className="flex gap-2 justify-between">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="scroll-m-20 mb-4 text-center text-4xl font-extrabold tracking-tight text-balance">
+          Projects
+        </h1>
+        <CreateProjectButton />
+      </div>
+      <div className="flex gap-2 justify-between items-center mb-4">
         <Select onValueChange={setStatus} value={status}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Status" />
