@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import type { Project } from "@/types/Projects/Project";
 import LinkField from "@/components/common/FormFields/LinkField";
 import { useFrappeCreateDoc } from "frappe-react-sdk";
-import { getUserDefaults } from "@/lib/defaults";
+import { getUserDefault } from "@/lib/defaults";
 
 const CreateProjectButton = () => {
   const [open, setOpen] = useState(false);
@@ -56,7 +56,7 @@ export default CreateProjectButton;
 const ProjectForm = ({ onClose }: { onClose: VoidFunction }) => {
   const form = useForm<Project>({
     defaultValues: {
-      company: getUserDefaults("company"),
+      company: getUserDefault("company"),
     },
   });
   const { createDoc, loading, error } = useFrappeCreateDoc<Project>();
