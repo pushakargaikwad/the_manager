@@ -5,12 +5,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFrappeGetDocList } from "frappe-react-sdk";
+import {
+  useFrappeDocTypeEventListener,
+  useFrappeGetDocList,
+} from "frappe-react-sdk";
 import type { Task } from "@/types/Projects/Task";
 import TaskRow from "@/components/features/Tasks/TaskRow";
 
 const Tasks = () => {
-  const { data, isLoading, error } = useFrappeGetDocList<Task>(
+  const { data, mutate, isValidating } = useFrappeGetDocList<Task>(
     "Task",
     {
       fields: [
@@ -26,6 +29,12 @@ const Tasks = () => {
     },
     "task_list"
   );
+
+  useFrappeDocTypeEventListener("Task", () => {
+    if (!isValidating) {
+      mutate();
+    }
+  });
   return (
     <div className="p-2">
       <div className="flex justify-between items-center mb-4">

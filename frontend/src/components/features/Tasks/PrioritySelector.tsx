@@ -23,14 +23,18 @@ const PrioritySelector = ({ priority, taskID }: Props) => {
   const { updateDoc } = useFrappeUpdateDoc<Task>();
 
   const onPriorityChange = (p: Task["priority"]) => {
-    console.log("prority changed to ", p);
-    updateDoc("Task", taskID, {
-      priority: p,
-    }).then((doc) => {
-      console.log("updated doc", doc);
-      mutate("task_list", (existingTasks?: Task[]) => {
-        return existingTasks?.map(
-          (task) => {
+    mutate(
+      // SWR Key
+      "task_list",
+
+      // function that updates the doc on backend
+      async (existingTasks?: Task[]) => {
+        return updateDoc("Task", taskID, {
+          priority: p,
+        }).then((doc) => {
+          console.log("updated doc", doc);
+
+          return existingTasks?.map((task) => {
             if (task.name === doc.name) {
               return {
                 ...task,
@@ -38,11 +42,28 @@ const PrioritySelector = ({ priority, taskID }: Props) => {
               };
             }
             return task;
-          },
-          { revalidate: false }
-        );
-      });
-    });
+          });
+        });
+      },
+
+      // mutate options - update locally optimisatically immediately
+      {
+        revalidate: false,
+        optimisticData: (existingTasks?: Task[]) => {
+          return (
+            existingTasks?.map((task) => {
+              if (task.name === taskID) {
+                return {
+                  ...task,
+                  priority: p,
+                };
+              }
+              return task;
+            }) ?? []
+          );
+        },
+      }
+    );
   };
 
   return (
