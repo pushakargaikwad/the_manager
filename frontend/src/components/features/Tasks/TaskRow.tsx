@@ -5,6 +5,7 @@
 import type { Task } from "@/types/Projects/Task";
 import React from "react";
 import PrioritySelector from "./PrioritySelector";
+import UserAssignees from "./UserAssignees";
 
 // TODO check if _assign is directly available in Frappe react sdk so that below part and manually adding _assign to frontend/src/types/Projects/Task.ts is not required
 type Props = {
@@ -41,6 +42,7 @@ const TaskRow = ({ task }: Props) => {
         <span className="text-xs text-muted-foreground font-light">
           {/* {dueDateFormatted} */}
         </span>
+        <UserAssignees users={task._assign} />
         {/* <UserSelector issueID={issue.name} userID={issue.assigned_to} /> */}
       </div>
     </div>
