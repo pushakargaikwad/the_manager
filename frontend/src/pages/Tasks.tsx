@@ -11,8 +11,11 @@ import {
 } from "frappe-react-sdk";
 import type { Task } from "@/types/Projects/Task";
 import TaskRow from "@/components/features/Tasks/TaskRow";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 const Tasks = () => {
+  const [subject, setSubject] = useState("");
   const { data, mutate, isValidating } = useFrappeGetDocList<Task>(
     "Task",
     {
@@ -26,8 +29,9 @@ const Tasks = () => {
         "priority",
         "_assign",
       ],
+      filters: [["subject", "like", `%${subject}%`]],
     },
-    "task_list"
+    ["task_list", subject]
   );
 
   useFrappeDocTypeEventListener("Task", () => {
@@ -41,6 +45,13 @@ const Tasks = () => {
         <h1 className="scroll-m-20 mb-4 text-center text-4xl font-extrabold tracking-tight text-balance">
           Tasks
         </h1>
+      </div>
+      <div>
+        <Input
+          placeholder="Search"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+        />
       </div>
       <div className="flex gap-2 justify-between items-center mb-4">
         <Select
