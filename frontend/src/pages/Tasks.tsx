@@ -13,9 +13,10 @@ import type { Task } from "@/types/Projects/Task";
 import TaskRow from "@/components/features/Tasks/TaskRow";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import useDebounce from "@/hooks/useDebounce";
 
 const Tasks = () => {
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useDebounce("");
   const { data, mutate, isValidating } = useFrappeGetDocList<Task>(
     "Task",
     {
@@ -49,7 +50,6 @@ const Tasks = () => {
       <div>
         <Input
           placeholder="Search"
-          value={subject}
           onChange={(e) => setSubject(e.target.value)}
         />
       </div>
