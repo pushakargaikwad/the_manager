@@ -56,3 +56,5 @@ jspm_packages/
 
 the_manager/public/frontend/
 the_manager/www/the_manager.html
+
+yarn.lock
